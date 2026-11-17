@@ -1,5 +1,6 @@
 #include "Chip8.h"
 #include <fstream>
+#include <stdexcept>
 
 bool Chip8::loadIntoMem(const std::string &fileName){
     //open file
@@ -33,4 +34,17 @@ bool Chip8::loadIntoMem(const std::string &fileName){
     }
 
     return true;
+}
+
+uint16_t Chip8::fetchNextInstruction(){
+    
+    if(PC + 1 > 0xFFF){
+        throw std::out_of_range("Invalid memory address");
+    }
+    uint16_t instruction = (memory[PC] << 8) | memory[PC + 1];
+    
+    //Send PC to next instruction
+    PC +=2;
+
+    return instruction;
 }
